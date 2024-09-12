@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton;
+namespace Guava\Onboarding;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use VendorName\Skeleton\Commands\SkeletonCommand;
+use Guava\Onboarding\Commands\OnboardingCommand;
 
-class SkeletonServiceProvider extends PackageServiceProvider
+class OnboardingServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
@@ -16,11 +16,11 @@ class SkeletonServiceProvider extends PackageServiceProvider
          * More info: https://github.com/spatie/laravel-package-tools
          */
         $package
-            ->name('skeleton')
-            ->hasConfigFile()
+            ->name('guava-onboarding')
+//            ->hasConfigFile()
             ->hasViews()
-            ->hasMigration('create_skeleton_table')
-            ->hasCommand(SkeletonCommand::class)
+//            ->hasMigration('create_onboarding_table')
+//            ->hasCommand(OnboardingCommand::class)
         ;
     }
 }

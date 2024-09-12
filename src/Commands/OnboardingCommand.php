@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Guava\Onboarding\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class OnboardingCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'onboarding';
 
     public $description = 'My command';
 
