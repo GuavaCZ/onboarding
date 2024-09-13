@@ -2,60 +2,69 @@
 
 namespace Guava\Onboarding\Filament;
 
+use Filament\Panel;
 use Filament\Support\Concerns\Configurable;
 use Filament\Support\Concerns\EvaluatesClosures;
+use Guava\Onboarding\Concerns\HasId;
 use Guava\Onboarding\Concerns\HasLabel;
-use Guava\Onboarding\Concerns\HasPrompt;
-use Guava\Onboarding\Concerns\HasSteps;
 use Guava\Onboarding\Facades\Onboarding;
+use Livewire\Livewire;
 use Livewire\Wireable;
 
 class Scenario implements Wireable
 {
     use Configurable;
     use EvaluatesClosures;
+    use HasId;
     use HasLabel;
-    use HasSteps;
-    use HasPrompt;
 
+    protected array $steps = [];
 
-    public function __construct(
-        protected ?string $id = null
-    )
-    {
+    protected string $prefix = 'onboarding';
+
+    public function prefix(string $prefix) {
+        $this->prefix = $prefix;
+        return $this;
     }
 
-    public static function getRoutePath(): string
+    public function getPrefix(): string
     {
-        return '';
+        return $this->prefix;
     }
 
-    public static function getRouteName(): string
-    {
-        throw new Exception('Please implement getRouteName() method.');
+    public function steps(array $steps) {
+        $this->steps = $steps;
+
+        return $this;
     }
 
-    public static function make(string $id = null): static
+    public function getSteps(): array
     {
-        return app(static::class, [
-            'id' => $id,
-        ])
-            ->configure()
-        ;
+        return $this->steps;
     }
 
-    public function resolveRouteBinding(mixed $value)
-    {
+    public static function make() {
+        return app(static::class);
+    }
+
+    public function registerRoutes(Panel $panel) {
+        foreach ($this->getSteps() as $step) {
+            dump($step);
+            $panel->authenticatedTenantRoutes(function() use ($step) {
+                \Route::get($this->prefix . '/{scenario}/' . $step::getRoutePath(), $step)
+                    ->name($this->prefix . '.' . $this->getId() . '.' . $step::getRouteName());
+            });
+
+            Livewire::component($this->getId() . '-' . class_basename($step), $step);
+        }
+    }
+
+    public function resolveRouteBinding($value, $field = null) {
         if ($value instanceof Scenario) {
             return $value;
         }
 
-        $scenario = filament()->getPlugin('guava-onboarding')->findScenario($value);
-
-        if (! $scenario) {
-            return null;
-        }
-        $scenario->id = $value;
+        $scenario = filament('guava-onboarding')->getCachedScenario($value);
         Onboarding::setScenario($scenario);
 
         return $scenario;
@@ -63,33 +72,21 @@ class Scenario implements Wireable
 
     public function toLivewire()
     {
-        return get_object_vars($this);
+        return ['id' => $this->getId()];
     }
 
     public static function fromLivewire($value)
     {
-        return app(static::class, ...$value);
+        return filament('guava-onboarding')->getCachedScenario(
+            data_get($value, 'id')
+        );
     }
 
-    public function id(string $id) {
-        $this->id = $id;
-        return $this;
+    public function getStepOrder(Onboard $step) {
+        return array_search($step::class, $this->getSteps());
     }
 
-    public function getId(): ?string
-    {
-        return $this->id;
-    }
-
-    public function getNextStep(): ?Step
-    {
-        $steps = array_values($this->getSteps()); // get array values
-        $key = array_search(Onboarding::getStep(), $steps);
-
-        if ($key !== false) {
-            return data_get($steps, $key + 1);
-        }
-
-        return null;
+    public function getTotalSteps() {
+        return count($this->getSteps());
     }
 }

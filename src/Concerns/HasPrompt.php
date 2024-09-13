@@ -2,11 +2,11 @@
 
 namespace Guava\Onboarding\Concerns;
 
-use Guava\Onboarding\Filament\DefaultPrompt;
+use Guava\Onboarding\Filament\DefaultOnboardingPage;
 
 trait HasPrompt
 {
-    protected string $prompt = DefaultPrompt::class;
+    protected string $prompt = DefaultOnboardingPage::class;
 
     public function prompt(string $prompt): static
     {

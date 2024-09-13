@@ -5,12 +5,14 @@ namespace Guava\Onboarding;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 use Filament\Support\Concerns\EvaluatesClosures;
+use Filament\Widgets\Widget;
 use Guava\Onboarding\Concerns\HasPrefix;
 use Guava\Onboarding\Concerns\HasScenarios;
-use Illuminate\Support\Facades\Route;
+use Guava\Onboarding\Filament\Scenario;
 
 class OnboardingPlugin implements Plugin
 {
+    use Panel\Concerns\HasComponents;
     use EvaluatesClosures;
     use HasPrefix;
     use HasScenarios;
@@ -18,6 +20,7 @@ class OnboardingPlugin implements Plugin
     protected array $cachedScenarios = [];
 
     protected array $cachedSteps = [];
+
     protected array $cachedStepsOnly = [];
 
     public function getId(): string
@@ -34,8 +37,9 @@ class OnboardingPlugin implements Plugin
         //        return;
 
         $this->cacheScenarios();
-        $this->cacheSteps();
         $this->registerRoutes($panel);
+        //        $this->cacheSteps();
+        //        $this->registerRoutes($panel);
 
     }
 
@@ -49,60 +53,46 @@ class OnboardingPlugin implements Plugin
         return new static;
     }
 
-    public function findScenario(string $scenario)
-    {
-        return data_get($this->getScenarios(), $scenario);
-    }
-
-    public function findStep(string $scenario, string $step)
-    {
-        $scenario = data_get($this->getScenarios(), $scenario);
-
-        return data_get($scenario->getSteps(), $step);
-    }
-
-    protected function cacheScenarios(): void
+    private function cacheScenarios()
     {
         foreach ($this->getScenarios() as $scenario) {
-            data_set($this->cachedScenarios, $scenario->getId(), $scenario);
+            $this->cachedScenarios[$scenario->getId()] = $scenario;
         }
     }
 
-    protected function cacheSteps(): void
+    public function getCachedScenarios(): array
     {
-        foreach ($this->getScenarios() as $scenario) {
-            foreach ($scenario->getSteps() as $step) {
-                $step->scenario($scenario);
-                data_set($this->cachedSteps, "{$scenario->getId()}.{$step->getId()}", $step);
-                data_set($this->cachedStepsOnly, "{$step->getId()}", $step);
-            }
-        }
-    }
-
-    protected function registerRoutes(Panel $panel)
-    {
-        foreach ($this->getCachedScenarios() as $id => $scenario) {
-            match ($panel->hasTenancy()) {
-                true => $panel->authenticatedTenantRoutes(
-                    fn() => Route::get("/$this->prefix/$id/{step}", $scenario->getPrompt())
-                        ->name('onboarding.prompt')
-                ),
-                false => $panel->authenticatedRoutes(
-                    fn() => Route::get("/$this->prefix/$id/{step}", $scenario->getPrompt())
-                        ->name('onboarding.prompt')
-                )
-            };
-        }
-    }
-
-    public function getCachedScenarios() {
         return $this->cachedScenarios;
     }
 
-    public function getCachedSteps() {
-        return $this->cachedSteps;
+    public function getCachedScenario(string $id): ?Scenario
+    {
+        return data_get($this->cachedScenarios,$id);
     }
-    public function getCachedStepsOnly() {
-        return $this->cachedStepsOnly;
+
+    private function registerRoutes(Panel $panel)
+    {
+        foreach ($this->getCachedScenarios() as $scenario) {
+            $scenario->registerRoutes($panel);
+        }
     }
+
+//    public function discoverScenarios(string $in, string $for): static
+//    {
+//        if ($this->hasCachedComponents()) {
+//            return $this;
+//        }
+//
+//        $this->widgetDirectories[] = $in;
+//        $this->widgetNamespaces[] = $for;
+//
+//        $this->discoverComponents(
+//            Widget::class,
+//            $this->widgets,
+//            directory: $in,
+//            namespace: $for,
+//        );
+//
+//        return $this;
+//    }
 }

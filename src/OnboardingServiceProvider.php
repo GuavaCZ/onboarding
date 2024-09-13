@@ -2,6 +2,8 @@
 
 namespace Guava\Onboarding;
 
+use Guava\Onboarding\Filament\FormOnboard;
+use Livewire\Livewire;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Guava\Onboarding\Commands\OnboardingCommand;
@@ -22,5 +24,10 @@ class OnboardingServiceProvider extends PackageServiceProvider
 //            ->hasMigration('create_onboarding_table')
 //            ->hasCommand(OnboardingCommand::class)
         ;
+    }
+
+    public function packageRegistered()
+    {
+//        Livewire::component(FormOnboard::class);
     }
 }
