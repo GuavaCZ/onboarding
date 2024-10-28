@@ -17,16 +17,9 @@ abstract class BasicOnboard extends Onboard
 
     protected static string $view = 'guava-onboarding::steps.basic';
 
-    public array $data = [];
-
-    public function mount()
+    public function mount(): void
     {
         parent::mount();
-        $this->form->fill();
     }
 
-    public function form(Form $form): Form
-    {
-        return $form->statePath('data');
-    }
 }

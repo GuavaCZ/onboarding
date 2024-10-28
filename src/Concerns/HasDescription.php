@@ -21,7 +21,7 @@ trait HasDescription
     public function getDescription(): null|string|HtmlString
     {
         return new HtmlString(
-            $this->evaluate($this->description)
+            $this->evaluate($this->description) ?? ''
         );
     }
 }

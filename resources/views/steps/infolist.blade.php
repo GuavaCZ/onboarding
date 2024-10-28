@@ -10,6 +10,11 @@
         </div>
     @endif
 
+    <div>
+        @foreach($this->getCachedInfolists() as $infolist)
+        {{$infolist}}
+        @endforeach
+    </div>
     <x-filament-panels::form>
         {{$this->form}}
 
@@ -20,6 +25,6 @@
     </x-filament-panels::form>
 
     @teleport('body')
-        <x-filament-actions::modals />
+    <x-filament-actions::modals />
     @endteleport
 </x-guava-onboarding::wrapper>

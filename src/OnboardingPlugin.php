@@ -5,7 +5,7 @@ namespace Guava\Onboarding;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 use Filament\Support\Concerns\EvaluatesClosures;
-use Filament\Widgets\Widget;
+use Guava\Onboarding\Collections\ScenarioCollection;
 use Guava\Onboarding\Concerns\HasPrefix;
 use Guava\Onboarding\Concerns\HasScenarios;
 use Guava\Onboarding\Filament\Scenario;
@@ -17,7 +17,7 @@ class OnboardingPlugin implements Plugin
     use HasPrefix;
     use HasScenarios;
 
-    protected array $cachedScenarios = [];
+    protected ScenarioCollection $cachedScenarios;
 
     protected array $cachedSteps = [];
 
@@ -38,8 +38,6 @@ class OnboardingPlugin implements Plugin
 
         $this->cacheScenarios();
         $this->registerRoutes($panel);
-        //        $this->cacheSteps();
-        //        $this->registerRoutes($panel);
 
     }
 
@@ -53,14 +51,18 @@ class OnboardingPlugin implements Plugin
         return new static;
     }
 
-    private function cacheScenarios()
+    private function cacheScenarios(): ScenarioCollection
     {
+        $this->cachedScenarios = new ScenarioCollection();
+
         foreach ($this->getScenarios() as $scenario) {
-            $this->cachedScenarios[$scenario->getId()] = $scenario;
+            $this->cachedScenarios->put($scenario->getId(), $scenario);
         }
+
+        return $this->cachedScenarios;
     }
 
-    public function getCachedScenarios(): array
+    public function getCachedScenarios(): ScenarioCollection
     {
         return $this->cachedScenarios;
     }
@@ -70,29 +72,11 @@ class OnboardingPlugin implements Plugin
         return data_get($this->cachedScenarios,$id);
     }
 
-    private function registerRoutes(Panel $panel)
+    private function registerRoutes(Panel $panel): void
     {
-        foreach ($this->getCachedScenarios() as $scenario) {
-            $scenario->registerRoutes($panel);
-        }
+        $this->getCachedScenarios()->each(
+            fn(Scenario $scenario) => $scenario->registerRoutes($panel)
+        );
     }
 
-//    public function discoverScenarios(string $in, string $for): static
-//    {
-//        if ($this->hasCachedComponents()) {
-//            return $this;
-//        }
-//
-//        $this->widgetDirectories[] = $in;
-//        $this->widgetNamespaces[] = $for;
-//
-//        $this->discoverComponents(
-//            Widget::class,
-//            $this->widgets,
-//            directory: $in,
-//            namespace: $for,
-//        );
-//
-//        return $this;
-//    }
 }

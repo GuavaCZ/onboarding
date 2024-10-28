@@ -3,6 +3,7 @@
 namespace Guava\Onboarding\Filament;
 
 use Filament\Forms\Form;
+use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Support\Concerns\EvaluatesClosures;
 use Filament\Support\Enums\Alignment;
 use Guava\Onboarding\Concerns\HasContent;
@@ -16,26 +17,18 @@ abstract class FormOnboard extends Onboard
     use HasDescription;
     use HasLabel;
 
-    public static string | Alignment $formActionsAlignment = Alignment::Right;
-
     protected static string $view = 'guava-onboarding::steps.form';
 
-    public array $data = [];
-
-    public function mount()
+    public function mount(): void
     {
         parent::mount();
         $this->form->fill();
     }
 
-    public function form(Form $form): Form
-    {
-        return $form->statePath('data');
-    }
-
     public function getNextStepAction()
     {
         return parent::getNextStepAction()
+            ->url(null)
             ->action($this->submitAction(...))
         ;
     }

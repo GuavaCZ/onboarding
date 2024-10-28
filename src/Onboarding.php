@@ -20,18 +20,4 @@ class Onboarding
     {
         return $this->scenario;
     }
-
-    public function setStep(Step $step): void
-    {
-        $this->step = $step;
-    }
-
-    public function getStep(): Step
-    {
-        return $this->step;
-    }
-
-    public function findStep(string $id) {
-        return data_get(filament('guava-onboarding')->getCachedStepsOnly(), $id);
-    }
 }

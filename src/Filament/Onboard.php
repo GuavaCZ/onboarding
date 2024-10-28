@@ -4,19 +4,26 @@ namespace Guava\Onboarding\Filament;
 
 use Filament\Actions\Action;
 use Filament\Facades\Filament;
+use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Pages\Concerns\HasRoutes;
+use Filament\Pages\Concerns\InteractsWithFormActions;
+use Filament\Pages\Page;
 use Filament\Pages\SimplePage;
 use Filament\Support\Enums\Alignment;
+use Guava\Onboarding\Concerns\InteractsWithFooterActions;
 use Guava\Onboarding\Facades\Onboarding;
 use Illuminate\Database\Eloquent\Model;
 
 abstract class Onboard extends SimplePage
 {
     use HasRoutes;
+    use InteractsWithFormActions;
+
+    public static string | Alignment $formActionsAlignment = Alignment::Right;
 
     public int $order = 0;
 
-    public function mount()
+    public function mount(): void
     {
         $this->order = $this->scenario->getStepOrder($this);
     }
@@ -31,17 +38,22 @@ abstract class Onboard extends SimplePage
     {
         return [
             ...parent::getLayoutData(),
+            'hasLogo' => $this->hasLogo(),
             'scenario' => $this->scenario,
             'step' => $this,
+            'livewire' => $this,
         ];
     }
 
     protected function getViewData(): array
     {
         return [
+            'hasLogo' => $this->hasLogo(),
+            'layout' => $this->getLayout(),
             'step' => $this,
         ];
     }
+
 
     public function getTotalSteps(): int
     {
@@ -70,7 +82,9 @@ abstract class Onboard extends SimplePage
     {
         return Action::make('next')
             ->hidden(! $this->hasNextStep())
-            ->url(fn () => $this->getNextStep()::getUrl())
+            ->url(fn () => $this->scenario->getSteps()->after(static::class)::getUrl([
+                'scenario' => $this->scenario,
+            ]))
         ;
     }
 
@@ -95,13 +109,22 @@ abstract class Onboard extends SimplePage
             }
         }
 
-        $parameters['scenario'] = Onboarding::getScenario()->getId();
+        $scenario = data_get($parameters, 'scenario');
 
-        $scenario = Onboarding::getScenario();
+        if (!$scenario) {
+            throw new \InvalidArgumentException('Scenario is required to generate URL');
+        }
+
+//        $parameters['scenario'] = Onboarding::getScenario()->getId();
+//
+//        $scenario = Onboarding::getScenario();
         $routeName = Filament::getPanel($panel)->generateRouteName(
-            $scenario->getPrefix() . '.' . $scenario->getId() . '.' .static::getRouteName()
+            $scenario->getPrefix() . '.' . $scenario->getId() . '.' .static::getRouteName($panel)
         );
 
         return route($routeName, $parameters, $isAbsolute);
     }
+
+//    abstract static function isCompleted(): bool;
+
 }
