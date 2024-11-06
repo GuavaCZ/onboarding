@@ -1,5 +1,6 @@
 ![onboarding Banner](docs/images/banner.jpg)
 
+# Work in progress, still under development
 
 # This is my package onboarding
 
@@ -56,10 +57,13 @@ php artisan vendor:publish --tag="onboarding-views"
 
 ## Usage
 
-```php
-$onboarding = new Guava\Onboarding();
-echo $onboarding->echoPhrase('Hello, Guava!');
-```
+[//]: # (```php)
+
+[//]: # (//$onboarding = new Guava\Onboarding&#40;&#41;;)
+
+[//]: # (//echo $onboarding->echoPhrase&#40;'Hello, Guava!'&#41;;)
+
+[//]: # (```)
 
 ## Testing
 
