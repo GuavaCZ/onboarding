@@ -3,8 +3,6 @@
 namespace Guava\Onboarding\Concerns;
 
 use Closure;
-use Filament\Support\Markdown;
-use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\HtmlString;
 
 trait HasDescription
@@ -18,7 +16,7 @@ trait HasDescription
         return $this;
     }
 
-    public function getDescription(): null|string|HtmlString
+    public function getDescription(): null | string | HtmlString
     {
         return new HtmlString(
             $this->evaluate($this->description) ?? ''

@@ -17,5 +17,4 @@ trait HasScenarios
     {
         return $this->evaluate($this->scenarios);
     }
-
 }

@@ -2,14 +2,12 @@
 
 namespace Guava\Onboarding\Collections;
 
-use Filament\Forms\Components\Wizard\Step;
 use Illuminate\Support\Collection;
 
-class StepCollection extends Collection {
-
+class StepCollection extends Collection
+{
     public function __construct($items = [])
     {
         parent::__construct($items);
     }
-
 }

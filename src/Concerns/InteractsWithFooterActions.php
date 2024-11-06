@@ -6,8 +6,8 @@ use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use InvalidArgumentException;
 
-trait InteractsWithFooterActions {
-
+trait InteractsWithFooterActions
+{
     /**
      * @var array<Action | ActionGroup>
      */

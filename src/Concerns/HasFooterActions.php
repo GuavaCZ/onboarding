@@ -5,8 +5,8 @@ namespace Guava\Onboarding\Concerns;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 
-trait HasFooterActions {
-
+trait HasFooterActions
+{
     /**
      * @var array<Action | ActionGroup>
      */

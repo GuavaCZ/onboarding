@@ -2,12 +2,12 @@
 
 namespace Guava\Onboarding;
 
+use Guava\Onboarding\Commands\OnboardingCommand;
 use Guava\Onboarding\Filament\FormOnboard;
 use Guava\Onboarding\Filament\ScenarioWidget;
 use Livewire\Livewire;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Guava\Onboarding\Commands\OnboardingCommand;
 
 class OnboardingServiceProvider extends PackageServiceProvider
 {
@@ -30,6 +30,6 @@ class OnboardingServiceProvider extends PackageServiceProvider
     public function packageBooted()
     {
         Livewire::component('scenario-widget', ScenarioWidget::class);
-//        Livewire::component(FormOnboard::class);
+        //        Livewire::component(FormOnboard::class);
     }
 }

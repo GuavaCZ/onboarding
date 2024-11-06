@@ -2,7 +2,6 @@
 
 namespace Guava\Onboarding\Filament;
 
-use Filament\Forms\Form;
 use Filament\Support\Concerns\EvaluatesClosures;
 use Guava\Onboarding\Concerns\HasContent;
 use Guava\Onboarding\Concerns\HasDescription;
@@ -21,5 +20,4 @@ abstract class BasicOnboard extends Onboard
     {
         parent::mount();
     }
-
 }

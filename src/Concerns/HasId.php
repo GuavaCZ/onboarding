@@ -2,8 +2,8 @@
 
 namespace Guava\Onboarding\Concerns;
 
-trait HasId {
-
+trait HasId
+{
     protected string $id;
 
     public function id(string $id): static
@@ -17,5 +17,4 @@ trait HasId {
     {
         return $this->id;
     }
-
 }

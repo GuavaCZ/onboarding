@@ -5,8 +5,8 @@ namespace Guava\Onboarding\Filament;
 use Filament\Widgets\Widget;
 use Filament\Widgets\WidgetConfiguration;
 
-class ScenarioWidget extends Widget {
-
+class ScenarioWidget extends Widget
+{
     protected static string $view = 'guava-onboarding::widgets.scenario-widget';
 
     public Scenario $scenario;
