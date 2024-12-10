@@ -54,7 +54,6 @@ abstract class Onboard extends SimplePage
         ];
     }
 
-
     public function getTotalSteps(): int
     {
         return $this->scenario->getTotalSteps();
@@ -103,6 +102,8 @@ abstract class Onboard extends SimplePage
 
     public static function getUrl(array $parameters = [], bool $isAbsolute = true, ?string $panel = null, ?Model $tenant = null): string
     {
+        $panel ??= Filament::getCurrentPanel()?->getId();
+
         if (! static::withTenant()) {
             if (blank($panel) || Filament::getPanel($panel)->hasTenancy()) {
                 $parameters['tenant'] ??= ($tenant ?? Filament::getTenant());
@@ -125,6 +126,8 @@ abstract class Onboard extends SimplePage
         return route($routeName, $parameters, $isAbsolute);
     }
 
-//    abstract static function isCompleted(): bool;
+    static function isCompleted(): bool {
+        return true;
+    }
 
 }

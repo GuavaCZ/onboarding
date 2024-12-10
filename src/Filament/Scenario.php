@@ -100,6 +100,14 @@ class Scenario implements Wireable
     public static function make(): static
     {
         return app(static::class)
+            ->completed(function(Scenario $scenario) {
+                foreach ($scenario->getSteps() as $step) {
+                    if (!$step::isCompleted()) {
+                        return false;
+                    }
+                }
+                return true;
+            })
             ->configure()
         ;
     }
@@ -174,7 +182,9 @@ class Scenario implements Wireable
 
     public function isCompleted()
     {
-        return $this->evaluate($this->completed);
+        return $this->evaluate($this->completed, [
+            'scenario' => $this,
+        ]);
     }
 
     public function __toString(): string
