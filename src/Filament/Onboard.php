@@ -4,17 +4,14 @@ namespace Guava\Onboarding\Filament;
 
 use Filament\Actions\Action;
 use Filament\Facades\Filament;
-use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Pages\Concerns\HasRoutes;
 use Filament\Pages\Concerns\InteractsWithFormActions;
-use Filament\Pages\Page;
 use Filament\Pages\SimplePage;
 use Filament\Support\Enums\Alignment;
-use Guava\Onboarding\Concerns\InteractsWithFooterActions;
 use Guava\Onboarding\Facades\Onboarding;
 use Illuminate\Database\Eloquent\Model;
 
-abstract class Onboard extends SimplePage
+abstract class Onboard extends Step
 {
     use HasRoutes;
     use InteractsWithFormActions;
@@ -112,13 +109,13 @@ abstract class Onboard extends SimplePage
 
         $scenario = data_get($parameters, 'scenario');
 
-        if (!$scenario) {
+        if (! $scenario) {
             throw new \InvalidArgumentException('Scenario is required to generate URL');
         }
 
-//        $parameters['scenario'] = Onboarding::getScenario()->getId();
-//
-//        $scenario = Onboarding::getScenario();
+        //        $parameters['scenario'] = Onboarding::getScenario()->getId();
+        //
+        //        $scenario = Onboarding::getScenario();
         $routeName = Filament::getPanel($panel)->generateRouteName(
             $scenario->getPrefix() . '.' . $scenario->getId() . '.' .static::getRouteName($panel)
         );
@@ -126,8 +123,8 @@ abstract class Onboard extends SimplePage
         return route($routeName, $parameters, $isAbsolute);
     }
 
-    static function isCompleted(): bool {
+    public static function isCompleted(): bool
+    {
         return true;
     }
-
 }
