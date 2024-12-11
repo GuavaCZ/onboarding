@@ -4,6 +4,7 @@ namespace Guava\Onboarding\Filament;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Session;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 abstract class Journey extends Component
@@ -30,11 +31,21 @@ abstract class Journey extends Component
         $this->js('window.history.pushState({}, "", "' . route($this->routeName(), ['step' => $step]) . '")');
     }
 
+    #[On('journey::previous-step')]
+    public function previousStep() {
+        if ($next = collect($this->steps())
+            ->before(fn (string $step) => $step === $this->current)
+        ) {
+            $this->setStep($next::key());
+        }
+    }
+
+    #[On('journey::next-step')]
     public function nextStep()
     {
         //        $this->validate();
 
-                $this->store();
+//                $this->store();
 
         if ($next = collect($this->steps())
             ->after(fn (string $step) => $step === $this->current)
@@ -51,7 +62,7 @@ abstract class Journey extends Component
 
     public function key()
     {
-        return static::class . '::' . $this->current;
+        return static::class;
     }
 
     public function render()
