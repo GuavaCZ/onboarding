@@ -19,6 +19,7 @@ abstract class Step extends Component
 
     public function nextStep()
     {
+        $this->validate();
         $this->store();
         $this->dispatch('journey::next-step');
     }
@@ -56,6 +57,6 @@ abstract class Step extends Component
 
     public function sessionKey(): string
     {
-        return static::$journey . '.' . static::key();
+        return static::$journey . '.state.' . static::key();
     }
 }

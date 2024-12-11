@@ -4,6 +4,8 @@ namespace Guava\Onboarding;
 
 use Guava\Onboarding\Filament\FormOnboard;
 use Guava\Onboarding\Filament\ScenarioWidget;
+use Guava\Onboarding\Support\JourneyMetaSynth;
+use Guava\Onboarding\Support\ProgressSynth;
 use Livewire\Livewire;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -31,5 +33,11 @@ class OnboardingServiceProvider extends PackageServiceProvider
     {
         Livewire::component('scenario-widget', ScenarioWidget::class);
 //        Livewire::component(FormOnboard::class);
+    }
+
+    public function bootingPackage()
+    {
+        Livewire::propertySynthesizer(ProgressSynth::class);
+        Livewire::propertySynthesizer(JourneyMetaSynth::class);
     }
 }

@@ -11,7 +11,7 @@ use Filament\Support\Enums\Alignment;
 use Guava\Onboarding\Facades\Onboarding;
 use Illuminate\Database\Eloquent\Model;
 
-abstract class Onboard extends Step
+abstract class Onboard extends SimplePage
 {
     use HasRoutes;
     use InteractsWithFormActions;

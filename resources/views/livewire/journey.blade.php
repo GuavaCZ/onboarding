@@ -1,10 +1,6 @@
-<div>
-    Current: {{$current}}
-    <livewire:dynamic-component :is="$current" :key="$current" />
+<x-guava-onboarding::wrapper :layout="$this->getLayout()">
 
-    <div>
-        SESSION ({{ $this->key() }}):
-    @dump(\Illuminate\Support\Facades\Session::get($this->key()))
-        @dump(\Illuminate\Support\Facades\Session::all())
-    </div>
-</div>
+    <x-guava-onboarding::progress :steps="$this->steps()" />
+
+    <livewire:dynamic-component :is="$current" :key="$current" />
+</x-guava-onboarding::wrapper>

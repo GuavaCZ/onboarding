@@ -18,15 +18,15 @@
             <img src="{{filament()->getCurrentPanel()->getDarkModeBrandLogo()}}" class="hidden dark:block h-12"/>
             <div class="flex flex-col gap-6">
                 <div class="flex flex-col items-start gap-1">
-                    <h2 class="text-primary-500 uppercase">{{$scenario->getLabel()}}</h2>
-                    <h1 class="text-3xl">{{$step->getLabel()}}</h1>
+                    <h2 class="text-primary-500 uppercase">Scenario Label</h2>
+                    <h1 class="text-3xl">Step label</h1>
                     <x-filament::badge>Nepovinné</x-filament::badge>
                 </div>
-                @if($description = $step->getDescription())
+{{--                @if($description = $step->getDescription())--}}
                 <div class="prose prose-lg dark:prose-invert">
-                    {{ $description }}
+                    Step description
                 </div>
-                @endif
+{{--                @endif--}}
             </div>
             <x-guava-onboarding::footer class="hidden lg:flex" />
         </div>
