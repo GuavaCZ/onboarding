@@ -1,6 +1,6 @@
 <?php
 
-namespace Guava\Onboarding\Concerns;
+namespace Guava\Onboarding\ConcernsOld;
 
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;

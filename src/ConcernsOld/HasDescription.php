@@ -1,6 +1,6 @@
 <?php
 
-namespace Guava\Onboarding\Concerns;
+namespace Guava\Onboarding\ConcernsOld;
 
 use Closure;
 use Filament\Support\Markdown;

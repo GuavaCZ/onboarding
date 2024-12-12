@@ -4,9 +4,9 @@ namespace Guava\Onboarding\Filament;
 
 use Filament\Forms\Form;
 use Filament\Support\Concerns\EvaluatesClosures;
-use Guava\Onboarding\Concerns\HasContent;
-use Guava\Onboarding\Concerns\HasDescription;
-use Guava\Onboarding\Concerns\HasLabel;
+use Guava\Onboarding\ConcernsOld\HasContent;
+use Guava\Onboarding\ConcernsOld\HasDescription;
+use Guava\Onboarding\ConcernsOld\HasLabel;
 
 abstract class BasicOnboard extends Onboard
 {

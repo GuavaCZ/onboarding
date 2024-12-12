@@ -3,8 +3,8 @@
 namespace Guava\Onboarding\ValueObjects;
 
 use Filament\Support\Concerns\EvaluatesClosures;
-use Guava\Onboarding\Concerns\HasDescription;
-use Guava\Onboarding\Concerns\HasLabel;
+use Guava\Onboarding\ConcernsOld\HasDescription;
+use Guava\Onboarding\ConcernsOld\HasLabel;
 
 class ContentData
 {

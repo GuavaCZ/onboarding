@@ -1,6 +1,6 @@
 <?php
 
-namespace Guava\Onboarding\Concerns;
+namespace Guava\Onboarding\ConcernsOld;
 
 trait HasPrefix
 {

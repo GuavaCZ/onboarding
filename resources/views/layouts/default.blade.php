@@ -1,4 +1,4 @@
-<x-filament-panels::layout.base :livewire="$livewire">
+{{--<x-filament-panels::layout.base :livewire="$livewire">--}}
     <div class="flex flex-col lg:flex-row lg:min-h-screen">
 
         @if (($hasTopbar ?? true) && filament()->auth()->check())
@@ -31,11 +31,13 @@
             <x-guava-onboarding::footer class="hidden lg:flex" />
         </div>
         <div class="w-full bg-white dark:bg-black">
-            {{ $slot }}
+{{--            @dd($this)--}}
+            @livewire($current, $this->getStepData(), key($current))
+{{--            {{ $slot }}--}}
 
             <div class="border-t border-gray-950/5 dark:border-white/10 bg-gray-50 flex flex-col lg:hidden px-8 md:px-16 xl:px-32 2xl:px-64 py-8 gap-4">
                 <x-guava-onboarding::footer />
             </div>
         </div>
     </div>
-</x-filament-panels::layout.base>
+{{--</x-filament-panels::layout.base>--}}
