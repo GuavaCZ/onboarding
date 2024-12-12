@@ -46,8 +46,12 @@ abstract class Step extends Component
 
     abstract public function session(): SessionMeta;
 
-    public function state(): array
+    public function state(?string $key = null): ?array
     {
+        if ($key) {
+            return data_get($this->state, $key);
+        }
+
         return collect($this->state)
             ->reduce(function (array $carry, array $item) {
                 return array_merge($carry, $item);

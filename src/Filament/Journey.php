@@ -169,4 +169,8 @@ abstract class Journey extends SimplePage
     }
 
     abstract public function session(): SessionMeta;
+
+    public function getStepData(): array {
+        return [];
+    }
 }
