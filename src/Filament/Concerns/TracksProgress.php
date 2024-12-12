@@ -39,7 +39,21 @@ trait TracksProgress
 //                    $status = 'current';
                 }
 
-                return new Progress($stepName, [], $status);
+                $info = [];
+
+                $indexAllowed = array_search($this->stepProgress, $this->steps());
+                $index = array_search($stepName, $this->steps());
+                $allowed = $index <= $indexAllowed;
+                $stepKey = (new $stepName)->session->key;
+                    $info = [
+                        'url' => $this->url([
+                            'step' => $stepKey,
+                        ]),
+                        'allowed' => $allowed,
+                    ];
+//                }
+
+                return new Progress($stepName, $info, $status);
             })
             ->toArray();
     }

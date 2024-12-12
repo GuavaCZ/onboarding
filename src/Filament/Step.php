@@ -2,61 +2,56 @@
 
 namespace Guava\Onboarding\Filament;
 
-use Illuminate\Support\Facades\Session;
+use Guava\Onboarding\Support\SessionMeta;
+use Livewire\Attributes\Session;
 use Livewire\Component;
 
-/**
- * @property string $journey
- */
 abstract class Step extends Component
 {
+    public SessionMeta $session;
 
-    public function mount() {
-        $this->retrieve();
+    #[Session(key: '{session.group}.state')]
+    public array $state = [];
+
+    #[Session(key: '{session.group}.state.{session.key}')]
+    public array $data = [];
+
+    public function __construct()
+    {
+        $this->session = $this->session();
     }
 
-    abstract public static function key(): string;
-
-    public function nextStep()
+    public function nextStep(): void
     {
-        $this->validate();
-        $this->store();
         $this->dispatch('journey::next-step');
     }
-    public function previousStep()
+
+    public function previousStep(): void
     {
-        $this->store();
         $this->dispatch('journey::previous-step');
     }
 
-    public function store()
+    public function setStep(string $step): void
     {
-        Session::put($this->sessionKey(), $this->all());
+        $this->dispatch('journey::set-step', $step);
     }
 
-    public function retrieve() {
-        $data = Session::get($this->sessionKey(), []);
-        $this->fill($data);
-
-        return $data;
-    }
-
-    public function retrieveAll() {
-        $data = Session::get(static::$journey, []);
-
-        return $data;
-    }
-
-    public function clear() {
-        Session::forget($this->sessionKey());
-    }
-
-    public function clearAll() {
-        Session::forget(static::$journey);
-    }
-
-    public function sessionKey(): string
+    public function clear(): void
     {
-        return static::$journey . '.state.' . static::key();
+        $this->data = [];
+        $this->state = [];
+        $this->session->clear();
+        $this->dispatch('journey::clear');
+    }
+
+    abstract public function session(): SessionMeta;
+
+    public function state(): array
+    {
+        return collect($this->state)
+            ->reduce(function (array $carry, array $item) {
+                return array_merge($carry, $item);
+            }, [])
+        ;
     }
 }
