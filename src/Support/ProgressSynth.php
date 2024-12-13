@@ -17,7 +17,7 @@ class ProgressSynth extends Synth
     public function dehydrate($target)
     {
         return [[
-            'progressName' => $target->progressName,
+            'step' => $target->step,
             'info' => $target->info,
             'state' => $target->state->value,
         ], []];
@@ -26,7 +26,7 @@ class ProgressSynth extends Synth
     public function hydrate($value)
     {
         return new Progress(
-            $value['progressName'],
+            $value['step'],
             $value['info'],
             ProgressState::from($value['state']),
         );

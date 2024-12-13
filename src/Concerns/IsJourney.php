@@ -3,25 +3,22 @@
 namespace Guava\Onboarding\Concerns;
 
 use Filament\Support\Exceptions\Halt;
-use Guava\Onboarding\Filament\Concerns\TracksProgress;
 use Guava\Onboarding\Filament\Step;
 use Guava\Onboarding\Support\SessionMeta;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\On;
 
 trait IsJourney
 {
-    use TracksProgress;
+    /** @var class-string<Step> */
+    public string $currentStep;
 
-//    protected static string $view = 'guava-onboarding::livewire.journey';
+    public string $currentStepName;
 
     /** @var class-string<Step> */
-    public ?string $current = null;
-
-    #[\Livewire\Attributes\Session(key: '{session.group}.meta.currentStep')]
-    public ?string $stepProgress = null;
+    #[\Livewire\Attributes\Session(key: '{session.group}.meta.reached-step')]
+    public string $reachedStep;
 
     public SessionMeta $session;
 
@@ -31,48 +28,36 @@ trait IsJourney
         dump(Session::all());
     }
 
-    public function mount(?string $step = null)
+    public function initialize(?string $step): void
     {
-        $step ??= array_key_first($this->steps());
+        $this->reachedStep ??= Arr::first($this->steps());
 
         // Specific step requested
         if ($step) {
-            $stepClass = Arr::first(
-                $this->steps(),
-                function (string $stepClass) use ($step) {
-                    /** @var Step $instance */
-                    $instance = new $stepClass;
+            $stepClass = $this->classByName($step);
 
-                    return $instance->session->key === $step;
-                }
-            );
+            // If authorized, go to the step
             if ($this->authorizeStep($stepClass)) {
                 $this->setStep($stepClass);
-            } else {
-                if (! $this->stepProgress) {
-                    $this->stepProgress = Arr::first($this->steps());
-                }
-                $this->setStep($this->stepProgress);
-            }
-            // TODO: Check if it's allowed, otherwise go to the last possible step (stored in session)
-        }
-        // No step requested
-        else {
-            // TODO: Check if there's a stored step
-            // TODO: -> If yes, go to that step
-            // TODO: -> If no, go to the first step
-            if ($this->stepProgress) {
-                $this->setStep($this->stepProgress);
-            } else {
-                $this->setStep(Arr::first($this->steps()));
+
+                return;
             }
         }
 
-        //        if ($this->authorizeStep($stepClass)) {
-        //            $this->setStep($stepClass);
-        //        } else {
-        //            $this->setStep($this->stepProgress);
-        //        }
+        // No step requested or unauthorized step requested -> go to the max reached step
+        $this->setStep($this->reachedStep);
+    }
+
+    public function mount(?string $step = null): void
+    {
+        $this->initialize($step);
+    }
+
+    public function refresh()
+    {
+        //        $stepComponent = $this->getStepComponent($this->current, $this->getStepData());
+        //        $this->stepInfo = $stepComponent->getStepInfo();
+        //        $this->dispatch('journey::refresh-progress');
     }
 
     /**
@@ -80,14 +65,14 @@ trait IsJourney
      */
     abstract public function steps(): array;
 
-    public function setStep(string $step)
+    protected function setStep(string $step)
     {
-        $indexAllowed = array_search($this->stepProgress, $this->steps());
+        $indexAllowed = array_search($this->reachedStep, $this->steps());
         $index = array_search($step, $this->steps());
 
-        $this->current = $step;
+        $this->currentStep = $step;
         if ($index > $indexAllowed) {
-            $this->stepProgress = $step;
+            $this->reachedStep = $step;
         }
         // TODO: Check here if the step CAN be set (either it's before the current or if current is null, only if its the first)
         // TODO: If yes, store it (JourneyState::save())
@@ -101,20 +86,32 @@ trait IsJourney
     }
 
     #[On('journey::previous-step')]
-    public function previousStep()
+    public function previousStep(): void
     {
-        if ($next = collect($this->steps())
-            ->before(fn (string $step) => $step === $this->current)
+        if ($previous = collect($this->steps())
+            ->before(fn (string $step) => $step === $this->currentStep)
         ) {
-            $this->setStep($next);
+            $this->goToStep($previous);
         }
-
-        $this->refreshProgress();
     }
 
     #[On('journey::next-step')]
-    public function nextStep()
+    public function nextStep(): void
     {
+        if ($next = collect($this->steps())
+            ->after(fn (string $step) => $step === $this->currentStep)
+        ) {
+            $this->goToStep($next);
+        }
+    }
+
+    #[On('journey::go-to-step')]
+    public function goToStep(string $step): void
+    {
+        if (! class_exists($step)) {
+            $step = $this->classByName($step);
+        }
+
         //        $this->authorizeAccess();
 
         try {
@@ -128,14 +125,8 @@ trait IsJourney
             //            $this->remember();
             $this->callHook('afterRemember');
 
-            if ($next = collect($this->steps())
-                ->after(fn (string $step) => $step === $this->current)
-            ) {
-                //                JourneyMeta::save($this, $next);
-                $this->setStep($next);
-            }
-
-            $this->refreshProgress();
+            $this->setStep($step);
+            $this->refresh();
         } catch (Halt $exception) {
             return;
         }
@@ -144,9 +135,9 @@ trait IsJourney
     #[On('journey::clear')]
     public function clear()
     {
-        $this->stepProgress = null;
+        $this->reachedStep = null;
         $this->setStep(Arr::first($this->steps()));
-        $this->refreshProgress();
+        $this->refresh();
     }
 
     abstract public function routeName(): string;
@@ -163,7 +154,7 @@ trait IsJourney
 
     public function authorizeStep(string $step): bool
     {
-        $indexAllowed = array_search($this->stepProgress, $this->steps());
+        $indexAllowed = array_search($this->reachedStep, $this->steps());
         $index = array_search($step, $this->steps());
 
         return $index <= $indexAllowed;
@@ -173,13 +164,44 @@ trait IsJourney
 
     public function getStepData(): array
     {
+        return [
+            'step' => $this->currentStepName,
+        ];
+    }
+
+    /**
+     * @return class-string<Step>
+     *
+     * @throws \Exception
+     */
+    private function classByName(string $step): string
+    {
+        if ($step = Arr::first(
+            $this->steps(),
+            function (string $stepClass) use ($step) {
+                /** @var Step $instance */
+                $instance = new $stepClass;
+
+                return $instance->session->key === $step;
+            }
+        )) {
+            return $step;
+        }
+
+        throw new \Exception('Step not found in the journey');
+    }
+
+    public function getJourneyInfo()
+    {
         return [];
     }
 
-//    public function render(): View
-//    {
-//        return view($this->getView())
-//            ->layout($this->getLayout())
-//        ;
-//    }
+    public function route()
+    {
+        return \Illuminate\Support\Facades\Route::get(
+            $this->ro
+        )
+            ->name($this->routeName())
+        ;
+    }
 }

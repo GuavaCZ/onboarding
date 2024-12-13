@@ -7,6 +7,7 @@ use Guava\Onboarding\Filament\ScenarioWidget;
 use Guava\Onboarding\Support\JourneyMetaSynth;
 use Guava\Onboarding\Support\ProgressSynth;
 use Guava\Onboarding\Support\SessionMetaSynth;
+use Guava\Onboarding\Support\StepInfoSynth;
 use Livewire\Livewire;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -41,5 +42,6 @@ class OnboardingServiceProvider extends PackageServiceProvider
         Livewire::propertySynthesizer(ProgressSynth::class);
         Livewire::propertySynthesizer(JourneyMetaSynth::class);
         Livewire::propertySynthesizer(SessionMetaSynth::class);
+        Livewire::propertySynthesizer(StepInfoSynth::class);
     }
 }

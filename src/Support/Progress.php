@@ -8,7 +8,7 @@ use Illuminate\Support\Arr;
 class Progress {
 
     public function __construct(
-        public string        $progressName,
+        public string        $step,
         public array         $info,
         public ProgressState $state,
     ) {
@@ -29,9 +29,9 @@ class Progress {
         return $this->state === ProgressState::Next;
     }
 
-    public function show(): string
+    public function goTo(): string
     {
-        return "showStep('{$this->progressName}')";
+        return "goToStep('{$this->step}')";
     }
 
     public function __get(string $key): mixed

@@ -2,12 +2,27 @@
 
 namespace Guava\Onboarding\Filament;
 
+use Guava\Onboarding\Filament\Concerns\TracksProgress;
 use Guava\Onboarding\Support\SessionMeta;
+use Guava\Onboarding\Support\StepInfo;
 use Livewire\Attributes\Session;
 use Livewire\Component;
+use Livewire\Livewire;
 
-abstract class Step extends Component
+use function Livewire\trigger;
+
+abstract class Step extends Component implements \Guava\Onboarding\Contracts\Step
 {
+    use TracksProgress;
+
+    /** @var class-string<Step> */
+    public ?string $current = null;
+
+    public array $steps = [];
+
+    #[\Livewire\Attributes\Session(key: '{session.group}.meta.currentStep')]
+    public ?string $stepProgress = null;
+
     public SessionMeta $session;
 
     #[Session(key: '{session.group}.state')]
@@ -16,6 +31,10 @@ abstract class Step extends Component
     #[Session(key: '{session.group}.state.{session.key}')]
     public array $data = [];
 
+    public ?StepInfo $stepInfo = null;
+
+    private \Guava\Onboarding\Contracts\Journey $journeyComponent;
+
     public function __construct()
     {
         $this->session = $this->session();
@@ -23,17 +42,22 @@ abstract class Step extends Component
 
     public function nextStep(): void
     {
-        $this->dispatch('journey::next-step');
+        $this->dispatch('journey::next-step')->to($this->getJourney());
     }
 
     public function previousStep(): void
     {
-        $this->dispatch('journey::previous-step');
+        $this->dispatch('journey::previous-step')->to($this->getJourney());
     }
 
     public function setStep(string $step): void
     {
-        $this->dispatch('journey::set-step', $step);
+        $this->dispatch('journey::set-step', $step)->to($this->getJourney());
+    }
+
+    public function goToStep(string $step): void
+    {
+        $this->dispatch('journey::go-to-step', $step)->to($this->getJourney());
     }
 
     public function clear(): void
@@ -57,5 +81,37 @@ abstract class Step extends Component
                 return array_merge($carry, $item);
             }, [])
         ;
+    }
+
+    abstract public function getStepInfo(): StepInfo;
+
+    protected function getJourneyComponent(string $step, array $params = []): \Guava\Onboarding\Contracts\Journey
+    {
+        //        $parent = app('livewire')->current();
+        if ($class = $step) {
+            $component = app('livewire')->new($class);
+            trigger('mount', $component, $params, null, null);
+
+            return $component;
+        }
+
+        throw new \Exception('No current step set');
+    }
+
+    public function getLayout(): string
+    {
+        return 'guava-onboarding::layouts.default';
+    }
+
+    /**
+     * @return class-string<\Guava\Onboarding\Contracts\Journey>
+     */
+    public function getJourney(): string
+    {
+        if (!isset(static::$journey)) {
+            throw new \Exception('No journey set');
+        }
+
+        return static::$journey;
     }
 }

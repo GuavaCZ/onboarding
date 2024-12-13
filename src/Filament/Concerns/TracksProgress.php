@@ -13,8 +13,7 @@ trait TracksProgress
     public function bootedTracksProgress()
     {
         if ($this->current) {
-
-        $this->refreshProgress();
+            $this->refreshProgress();
         }
     }
 
@@ -25,7 +24,7 @@ trait TracksProgress
 
         $currentStepName = $this->current;
 
-        $this->progress = collect($this->steps())
+        $this->progress = collect($this->steps)
             ->map(function (string $stepName) use (&$currentFound, $currentStepName) {
 //                $className = app(ComponentRegistry::class)->getClass($stepName);
 //
@@ -41,19 +40,16 @@ trait TracksProgress
 
                 $info = [];
 
-                $indexAllowed = array_search($this->stepProgress, $this->steps());
-                $index = array_search($stepName, $this->steps());
+                $indexAllowed = array_search($this->stepProgress, $this->steps);
+                $index = array_search($stepName, $this->steps);
                 $allowed = $index <= $indexAllowed;
                 $stepKey = (new $stepName)->session->key;
                     $info = [
-                        'url' => $this->url([
-                            'step' => $stepKey,
-                        ]),
                         'allowed' => $allowed,
                     ];
 //                }
 
-                return new Progress($stepName, $info, $status);
+                return new Progress($stepKey, $info, $status);
             })
             ->toArray();
     }

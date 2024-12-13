@@ -24,14 +24,16 @@
 {{--    @endteleport--}}
 {{--</x-guava-onboarding::wrapper>--}}
 
-<div>
-    {{--    test--}}
-    {{--    <input type="text" wire:model.live="name" />--}}
-
+<x-dynamic-component :component="$this->getLayout()">
     {{ $this->form }}
 
     <div class="mt-8">
         <x-filament::button wire:click.prevent="previousStep()">Previous step child</x-filament::button>
         <x-filament::button wire:click.prevent="nextStep()">Next step child</x-filament::button>
     </div>
-</div>
+
+
+    @teleport('body')
+    <x-filament-actions::modals />
+    @endteleport
+</x-dynamic-component>

@@ -24,9 +24,9 @@
                     @if($label = $this->stepInfo?->label)
                         <h1 class="text-3xl">{{$label}}</h1>
                     @endif
-                    @if (!$this->stepInfo->optional)
+{{--                    @if (!$this->stepInfo?->optional)--}}
                         <x-filament::badge>Nepovinné</x-filament::badge>
-                    @endif
+{{--                    @endif--}}
                 </div>
 {{--                @if($description = $step->getDescription())--}}
                 @if($description = $this->stepInfo?->description)
