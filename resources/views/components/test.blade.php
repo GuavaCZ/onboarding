@@ -1,10 +1,11 @@
 <div>
-    @if($this->currentStep)
-        @livewire($currentStep, [
+
+@if($this->currentStep)
+        @livewire($this->currentStep, [
         ...$this->getStepData(),
-        'current' => $currentStep,
+        'current' => $this->currentStep,
         'journey-info' => $this->getJourneyInfo(),
         'steps' => $this->steps(),
-    ], key($currentStep))
-    @endif
+    ], key($this->currentStep))
+@endif
 </div>

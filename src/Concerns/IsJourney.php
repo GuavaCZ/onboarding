@@ -5,6 +5,7 @@ namespace Guava\Onboarding\Concerns;
 use Filament\Support\Exceptions\Halt;
 use Guava\Onboarding\Filament\Step;
 use Guava\Onboarding\Support\SessionMeta;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\On;
@@ -18,14 +19,13 @@ trait IsJourney
 
     /** @var class-string<Step> */
     #[\Livewire\Attributes\Session(key: '{session.group}.meta.reached-step')]
-    public string $reachedStep;
+    public ?string $reachedStep = null;
 
     public SessionMeta $session;
 
     public function __construct()
     {
         $this->session = $this->session();
-        dump(Session::all());
     }
 
     public function initialize(?string $step): void
@@ -71,6 +71,7 @@ trait IsJourney
         $index = array_search($step, $this->steps());
 
         $this->currentStep = $step;
+        $this->currentStepName = (new $step)->session->key;
         if ($index > $indexAllowed) {
             $this->reachedStep = $step;
         }
@@ -199,9 +200,25 @@ trait IsJourney
     public function route()
     {
         return \Illuminate\Support\Facades\Route::get(
-            $this->ro
+//            $this->ro
         )
             ->name($this->routeName())
         ;
+    }
+
+
+
+    public function render():View {
+        return view('guava-onboarding::components.test');
+    }
+
+    public static function requiresCompletion(): bool
+    {
+        return false;
+    }
+
+    public static function completed(): bool
+    {
+        return false;
     }
 }
