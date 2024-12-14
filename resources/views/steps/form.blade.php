@@ -1,31 +1,4 @@
-{{--<x-guava-onboarding::wrapper :layout="$layout">--}}
-
-{{--    <x-guava-onboarding::progress--}}
-{{--        :steps="$this->scenario->getSteps()"--}}
-{{--        :current="$this->order"--}}
-{{--    />--}}
-{{--    @if($content = $step->getContent())--}}
-{{--        <div class="prose prose-lg dark:prose-invert">--}}
-{{--            {{$content}}--}}
-{{--        </div>--}}
-{{--    @endif--}}
-
-{{--    <x-filament-panels::form>--}}
-{{--        {{$this->form}}--}}
-
-{{--        <x-filament-panels::form.actions--}}
-{{--            :actions="$this->getCachedFormActions()"--}}
-{{--            :full-width="$this->hasFullWidthFormActions()"--}}
-{{--        />--}}
-{{--    </x-filament-panels::form>--}}
-
-{{--    @teleport('body')--}}
-{{--        <x-filament-actions::modals />--}}
-{{--    @endteleport--}}
-{{--</x-guava-onboarding::wrapper>--}}
-
-<x-dynamic-component :component="$this->getLayout()">
-{{--<div>--}}
+<x-guava-onboarding::step>
     {{ $this->form }}
 
     <div class="mt-8">
@@ -34,9 +7,7 @@
         <x-filament::button wire:click.prevent="nextStep()">Next step</x-filament::button>
     </div>
 
-
     @teleport('body')
     <x-filament-actions::modals />
     @endteleport
-{{--</div>--}}
-</x-dynamic-component>
+</x-guava-onboarding::step>

@@ -1,5 +1,3 @@
-@props([
-    'current',
-    'step-data',
-])
-@livewire($current, $this->getStepData(), key($current))
+<x-dynamic-component :component="$this->getLayout()">
+    {{ $slot }}
+</x-dynamic-component>

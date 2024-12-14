@@ -209,7 +209,7 @@ trait IsJourney
 
 
     public function render():View {
-        return view('guava-onboarding::components.test');
+        return view('guava-onboarding::components.journey');
     }
 
     public static function requiresCompletion(): bool
