@@ -3,7 +3,7 @@
 namespace Guava\Onboarding;
 
 use Guava\Onboarding\Filament\Scenario;
-use Guava\Onboarding\Filament\Step;
+use Guava\Onboarding\Livewire\Step;
 
 class Onboarding
 {

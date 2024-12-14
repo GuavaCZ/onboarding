@@ -3,7 +3,7 @@
 namespace Guava\Onboarding\Concerns;
 
 use Filament\Support\Exceptions\Halt;
-use Guava\Onboarding\Filament\Step;
+use Guava\Onboarding\Livewire\Step;
 use Guava\Onboarding\Support\SessionMeta;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Arr;

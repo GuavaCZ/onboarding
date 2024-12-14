@@ -1,17 +1,15 @@
 <?php
 
-namespace Guava\Onboarding\Filament;
+namespace Guava\Onboarding\Concerns;
 
 use Guava\Onboarding\Filament\Concerns\TracksProgress;
+use Guava\Onboarding\Livewire\Step;
 use Guava\Onboarding\Support\SessionMeta;
 use Guava\Onboarding\Support\StepInfo;
 use Livewire\Attributes\Session;
-use Livewire\Component;
-use Livewire\Livewire;
+use Livewire\Exceptions\PropertyNotFoundException;
 
-use function Livewire\trigger;
-
-abstract class Step extends Component implements \Guava\Onboarding\Contracts\Step
+trait IsStep
 {
     use TracksProgress;
 
@@ -20,8 +18,8 @@ abstract class Step extends Component implements \Guava\Onboarding\Contracts\Ste
 
     public array $steps = [];
 
-//    #[\Livewire\Attributes\Session(key: '{session.group}.meta.currentStep')]
-//    public ?string $stepProgress = null;
+    //    #[\Livewire\Attributes\Session(key: '{session.group}.meta.currentStep')]
+    //    public ?string $stepProgress = null;
 
     public SessionMeta $session;
 
@@ -33,7 +31,7 @@ abstract class Step extends Component implements \Guava\Onboarding\Contracts\Ste
 
     public ?StepInfo $stepInfo = null;
 
-//    private \Guava\Onboarding\Contracts\Journey $journeyComponent;
+    //    private \Guava\Onboarding\Contracts\Journey $journeyComponent;
 
     public function __construct()
     {
@@ -85,18 +83,18 @@ abstract class Step extends Component implements \Guava\Onboarding\Contracts\Ste
 
     abstract public function getStepInfo(): StepInfo;
 
-//    protected function getJourneyComponent(string $step, array $params = []): \Guava\Onboarding\Contracts\Journey
-//    {
-//        //        $parent = app('livewire')->current();
-//        if ($class = $step) {
-//            $component = app('livewire')->new($class);
-//            trigger('mount', $component, $params, null, null);
-//
-//            return $component;
-//        }
-//
-//        throw new \Exception('No current step set');
-//    }
+    //    protected function getJourneyComponent(string $step, array $params = []): \Guava\Onboarding\Contracts\Journey
+    //    {
+    //        //        $parent = app('livewire')->current();
+    //        if ($class = $step) {
+    //            $component = app('livewire')->new($class);
+    //            trigger('mount', $component, $params, null, null);
+    //
+    //            return $component;
+    //        }
+    //
+    //        throw new \Exception('No current step set');
+    //    }
 
     public static function getLayout(): string
     {
@@ -108,7 +106,7 @@ abstract class Step extends Component implements \Guava\Onboarding\Contracts\Ste
      */
     public function getJourney(): string
     {
-        if (!isset(static::$journey)) {
+        if (! isset(static::$journey)) {
             throw new \Exception('No journey set');
         }
 
