@@ -96,9 +96,14 @@ trait IsStep
     //        throw new \Exception('No current step set');
     //    }
 
-    public static function getLayout(): string
+    public function getLayout(): string
     {
         return static::$layout ?? 'guava-onboarding::layouts.blank';
+    }
+
+    public function getLayoutData(): array
+    {
+        return [];
     }
 
     /**
