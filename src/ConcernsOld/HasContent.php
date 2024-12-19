@@ -3,8 +3,6 @@
 namespace Guava\Onboarding\ConcernsOld;
 
 use Closure;
-use Filament\Support\Markdown;
-use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\HtmlString;
 
 trait HasContent
@@ -18,7 +16,7 @@ trait HasContent
         return $this;
     }
 
-    public function getContent(): null|string|HtmlString
+    public function getContent(): null | string | HtmlString
     {
         return new HtmlString(
             $this->evaluate($this->content)

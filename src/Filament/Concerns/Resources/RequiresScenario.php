@@ -9,7 +9,6 @@ trait RequiresScenario
 {
     abstract public static function getScenario(): Scenario;
 
-
     public static function can(string $action, ?Model $record = null): bool
     {
         $authorize = parent::can($action, $record);

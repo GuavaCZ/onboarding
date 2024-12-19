@@ -6,7 +6,6 @@ use Guava\Onboarding\Filament\Scenario;
 
 trait RequiresScenario
 {
-
     public function getView(): string
     {
         if ($this->getScenario()->isCompleted()) {
@@ -20,5 +19,4 @@ trait RequiresScenario
     {
         return static::getResource()::getScenario();
     }
-
 }

@@ -2,9 +2,9 @@
 
 namespace Guava\Onboarding\Tests;
 
+use Guava\Onboarding\OnboardingServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Guava\Onboarding\OnboardingServiceProvider;
 
 class TestCase extends Orchestra
 {

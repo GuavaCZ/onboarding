@@ -15,10 +15,10 @@ use Livewire\Mechanisms\ComponentRegistry;
 
 class OnboardingPlugin implements Plugin
 {
-    use Panel\Concerns\HasComponents;
     use EvaluatesClosures;
     use HasPrefix;
     use HasScenarios;
+    use Panel\Concerns\HasComponents;
 
     protected ScenarioCollection $cachedScenarios;
 
@@ -57,7 +57,7 @@ class OnboardingPlugin implements Plugin
 
     private function cacheScenarios(): ScenarioCollection
     {
-        $this->cachedScenarios = new ScenarioCollection();
+        $this->cachedScenarios = new ScenarioCollection;
 
         foreach ($this->getScenarios() as $scenario) {
             $this->cachedScenarios->put($scenario->getId(), $scenario);
@@ -73,13 +73,13 @@ class OnboardingPlugin implements Plugin
 
     public function getCachedScenario(string $id): ?Scenario
     {
-        return data_get($this->cachedScenarios,$id);
+        return data_get($this->cachedScenarios, $id);
     }
 
     private function registerRoutes(Panel $panel): void
     {
         $this->getCachedScenarios()->each(
-            fn(Scenario $scenario) => $scenario->registerRoutes($panel)
+            fn (Scenario $scenario) => $scenario->registerRoutes($panel)
         );
 
         $panel->pages($this->getJourneys());
@@ -92,5 +92,4 @@ class OnboardingPlugin implements Plugin
             }
         }
     }
-
 }

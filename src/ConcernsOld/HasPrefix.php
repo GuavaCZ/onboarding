@@ -4,7 +4,6 @@ namespace Guava\Onboarding\ConcernsOld;
 
 trait HasPrefix
 {
-
     protected string $prefix = 'onboarding';
 
     public function prefix(string $prefix): static
@@ -18,5 +17,4 @@ trait HasPrefix
     {
         return $this->prefix;
     }
-
 }
