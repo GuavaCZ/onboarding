@@ -16,20 +16,20 @@ class OnboardingMiddleware
         $plugin = filament('guava-onboarding');
 
         if ($journey = collect($plugin->getJourneys())
-        ->where(fn($journey) => $journey::requiresCompletion())
-        ->where(fn($journey) => ! $journey::completed())
-        ->first()) {
+            ->where(fn ($journey) => $journey::requiresCompletion())
+            ->where(fn ($journey) => ! $journey::completed())
+            ->first()) {
 
             $panel = Filament::getCurrentPanel();
             $routeName = $panel->generateRouteName($journey::getRelativeRouteName());
-//            dd($journey::getRelativeRouteName());
+            //            dd($journey::getRelativeRouteName());
             if ($request->routeIs($routeName . '*')) {
                 return $next($request);
             }
 
-//            $step = $scenario->getSteps()->first();
+            //            $step = $scenario->getSteps()->first();
 
-//            $url = $journey::getUrl();
+            //            $url = $journey::getUrl();
             $params = [];
             if ($tenant = Filament::getTenant()) {
                 $params['tenant'] = $tenant;

@@ -8,7 +8,6 @@ use Filament\Support\Concerns\EvaluatesClosures;
 use Guava\Onboarding\Collections\ScenarioCollection;
 use Guava\Onboarding\ConcernsOld\HasPrefix;
 use Guava\Onboarding\ConcernsOld\HasScenarios;
-use Guava\Onboarding\Filament\Journey;
 use Guava\Onboarding\Filament\Scenario;
 use Livewire\Livewire;
 use Livewire\Mechanisms\ComponentRegistry;
@@ -53,7 +52,6 @@ class OnboardingPlugin implements Plugin
     {
         return new static;
     }
-
 
     private function cacheScenarios(): ScenarioCollection
     {

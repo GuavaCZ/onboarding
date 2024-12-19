@@ -7,7 +7,6 @@ use Guava\Onboarding\Livewire\Step;
 use Guava\Onboarding\Support\SessionMeta;
 use Guava\Onboarding\Support\StepInfo;
 use Livewire\Attributes\Session;
-use Livewire\Exceptions\PropertyNotFoundException;
 
 trait IsStep
 {

@@ -2,7 +2,6 @@
 
 namespace Guava\Onboarding\Support;
 
-use Guava\Onboarding\Enums\ProgressState;
 use Livewire\Mechanisms\HandleComponents\Synthesizers\Synth;
 
 class StepInfoSynth extends Synth

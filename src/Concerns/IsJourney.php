@@ -7,7 +7,6 @@ use Guava\Onboarding\Livewire\Step;
 use Guava\Onboarding\Support\SessionMeta;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\On;
 
 trait IsJourney
@@ -200,15 +199,14 @@ trait IsJourney
     public function route()
     {
         return \Illuminate\Support\Facades\Route::get(
-//            $this->ro
+            //            $this->ro
         )
             ->name($this->routeName())
         ;
     }
 
-
-
-    public function render():View {
+    public function render(): View
+    {
         return view('guava-onboarding::components.journey');
     }
 

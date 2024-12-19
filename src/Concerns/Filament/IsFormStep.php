@@ -2,7 +2,8 @@
 
 namespace Guava\Onboarding\Concerns\Filament;
 
-trait IsFormStep {
+trait IsFormStep
+{
     use HasActions;
 
     public function render()
