@@ -2,8 +2,8 @@
 
 namespace Guava\Onboarding\Concerns\Filament;
 
-trait IsInfolistStep {
-
+trait IsInfolistStep
+{
     use HasActions;
 
     public function render()

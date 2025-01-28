@@ -5,14 +5,13 @@ namespace Guava\Onboarding\Support;
 use Guava\Onboarding\Enums\ProgressState;
 use Illuminate\Support\Arr;
 
-class Progress {
-
+class Progress
+{
     public function __construct(
-        public string        $step,
-        public array         $info,
+        public string $step,
+        public array $info,
         public ProgressState $state,
-    ) {
-    }
+    ) {}
 
     public function isPrevious(): bool
     {

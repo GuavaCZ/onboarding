@@ -2,7 +2,4 @@
 
 namespace Guava\Onboarding\Contracts;
 
-interface Step {
-
-
-}
+interface Step {}

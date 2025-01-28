@@ -5,6 +5,7 @@ namespace Guava\Onboarding\ConcernsOld;
 trait HasScenarios
 {
     protected array $scenarios = [];
+
     protected array $journeys = [];
 
     public function scenarios(array $scenarios): static
@@ -30,5 +31,4 @@ trait HasScenarios
     {
         return $this->evaluate($this->journeys);
     }
-
 }

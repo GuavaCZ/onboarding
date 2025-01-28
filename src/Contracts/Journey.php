@@ -2,6 +2,4 @@
 
 namespace Guava\Onboarding\Contracts;
 
-interface Journey {
-
-}
+interface Journey {}

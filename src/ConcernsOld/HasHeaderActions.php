@@ -2,6 +2,4 @@
 
 namespace Guava\Onboarding\ConcernsOld;
 
-trait HasHeaderActions {
-
-}
+trait HasHeaderActions {}

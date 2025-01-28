@@ -21,7 +21,8 @@ trait TracksProgress
     }
 
     #[On('journey::refresh-progress')]
-    public function refreshProgress() {
+    public function refreshProgress()
+    {
 
         $currentFound = false;
 
@@ -29,16 +30,16 @@ trait TracksProgress
 
         $this->progress = collect($this->steps)
             ->map(function (string $stepName) use (&$currentFound, $currentStepName) {
-//                $className = app(ComponentRegistry::class)->getClass($stepName);
-//
-//                $info = (new $className())->stepInfo();
+                //                $className = app(ComponentRegistry::class)->getClass($stepName);
+                //
+                //                $info = (new $className())->stepInfo();
 
                 $status = $currentFound ? ProgressState::Next : ProgressState::Previous;
 
                 if ($stepName === $currentStepName) {
                     $currentFound = true;
                     $status = ProgressState::Current;
-//                    $status = 'current';
+                    //                    $status = 'current';
                 }
 
                 $info = [];
@@ -47,13 +48,14 @@ trait TracksProgress
                 $index = array_search($stepName, $this->steps);
                 $allowed = $index <= $indexAllowed;
                 $stepKey = (new $stepName)->session->key;
-                    $info = [
-                        'allowed' => $allowed,
-                    ];
-//                }
+                $info = [
+                    'allowed' => $allowed,
+                ];
+                //                }
 
                 return new Progress($stepKey, $info, $status);
             })
-            ->toArray();
+            ->toArray()
+        ;
     }
 }
