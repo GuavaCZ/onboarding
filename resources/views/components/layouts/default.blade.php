@@ -14,8 +14,12 @@
         @endif
 
         <div class="lg:sticky lg:top-0 flex flex-col items-center gap-16 lg:items-start lg:h-screen w-full lg:max-w-sm xl:max-w-md p-12 border-b lg:border-b-0 lg:border-r border-gray-950/5 dark:bg-gray-900 dark:border-white/10">
-            <img src="{{filament()->getCurrentPanel()->getBrandLogo()}}" class="block dark:hidden h-12"/>
-            <img src="{{filament()->getCurrentPanel()->getDarkModeBrandLogo()}}" class="hidden dark:block h-12"/>
+            @if ($hasBrandLogo ?? true)
+                <img src="{{filament()->getDefaultPanel()->getBrandLogo()}}" class="block dark:hidden h-12"/>
+                <img src="{{filament()->getDefaultPanel()->getDarkModeBrandLogo()}}" class="hidden dark:block h-12"/>
+            @else
+                <div></div>
+            @endif
             <div class="flex flex-col gap-6">
 
                 <x-guava-onboarding::progress />
