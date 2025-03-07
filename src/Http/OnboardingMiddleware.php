@@ -5,6 +5,7 @@ namespace Guava\Onboarding\Http;
 use Closure;
 use Filament\Facades\Filament;
 use Guava\Onboarding\Filament\Scenario;
+use Guava\Onboarding\Onboarding;
 use Guava\Onboarding\OnboardingPlugin;
 use Illuminate\Http\Request;
 
@@ -19,17 +20,15 @@ class OnboardingMiddleware
             ->where(fn ($journey) => $journey::requiresCompletion())
             ->where(fn ($journey) => ! $journey::completed())
             ->first()) {
+            if (Onboarding::isFake()) return $next($request);
 
             $panel = Filament::getCurrentPanel();
             $routeName = $panel->generateRouteName($journey::getRelativeRouteName());
-            //            dd($journey::getRelativeRouteName());
+
             if ($request->routeIs($routeName . '*')) {
                 return $next($request);
             }
 
-            //            $step = $scenario->getSteps()->first();
-
-            //            $url = $journey::getUrl();
             $params = [];
             if ($tenant = Filament::getTenant()) {
                 $params['tenant'] = $tenant;
@@ -44,6 +43,8 @@ class OnboardingMiddleware
             ->whereRequiresCompletion()
             ->whereNotCompleted()
             ->first()) {
+            if (Onboarding::isFake()) return $next($request);
+
             if ($request->routeIs($scenario->getRoute() . '*')) {
                 return $next($request);
             }
