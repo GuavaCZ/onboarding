@@ -34,7 +34,7 @@ trait HasActions
     public function getPreviousStepAction(): ?Action
     {
         return Action::make('previous-step')
-            ->label('Previous')
+            ->label(__('guava-onboarding::actions.previous-step'))
             ->action('previousStep')
             ->icon('heroicon-o-arrow-small-left')
             ->color('gray')
@@ -48,7 +48,7 @@ trait HasActions
     public function getNextStepAction(): ?Action
     {
         return Action::make('next-step')
-            ->label('Next')
+            ->label(__('guava-onboarding::actions.next-step'))
             ->action('nextStep')
             ->icon('heroicon-o-arrow-small-right')
             ->iconPosition(IconPosition::After)
@@ -63,7 +63,7 @@ trait HasActions
     public function getSubmitAction(): ?Action
     {
         return Action::make('submit')
-            ->label('Submit')
+            ->label(__('guava-onboarding::actions.submit'))
             ->action('submit')
             ->extraAttributes([
                 'class' => 'ml-auto',
