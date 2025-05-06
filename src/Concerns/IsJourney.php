@@ -34,11 +34,7 @@ trait IsJourney
         }
     }
 
-    protected function preMount()
-    {
-
-
-    }
+    protected function preMount() {}
 
     protected function doMount() {}
 
