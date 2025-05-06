@@ -20,7 +20,9 @@ class OnboardingMiddleware
             ->where(fn ($journey) => $journey::requiresCompletion())
             ->where(fn ($journey) => ! $journey::completed())
             ->first()) {
-            if (Onboarding::isFake()) return $next($request);
+            if (Onboarding::isFake()) {
+                return $next($request);
+            }
 
             $panel = Filament::getCurrentPanel();
             $routeName = $panel->generateRouteName($journey::getRelativeRouteName());
@@ -43,7 +45,9 @@ class OnboardingMiddleware
             ->whereRequiresCompletion()
             ->whereNotCompleted()
             ->first()) {
-            if (Onboarding::isFake()) return $next($request);
+            if (Onboarding::isFake()) {
+                return $next($request);
+            }
 
             if ($request->routeIs($scenario->getRoute() . '*')) {
                 return $next($request);

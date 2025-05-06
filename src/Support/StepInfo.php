@@ -8,7 +8,7 @@ class StepInfo
 {
     public function __construct(
         public string $label,
-        public string|HtmlString $description,
+        public string | HtmlString $description,
         public bool $optional = false,
     ) {}
 }
