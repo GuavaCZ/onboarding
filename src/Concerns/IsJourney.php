@@ -25,7 +25,6 @@ trait IsJourney
     public function __construct()
     {
         $this->session = $this->session();
-
     }
 
     public function initialize(?string $step): void
