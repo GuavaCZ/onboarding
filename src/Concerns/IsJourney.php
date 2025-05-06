@@ -167,7 +167,7 @@ trait IsJourney
     //    public function clear()
     //    {
     //        $this->reachedStep = null;
-    ////        $this->session->meta(['reached-step' => null]);
+    // //        $this->session->meta(['reached-step' => null]);
     //        $this->setStep(Arr::first($this->steps()));
     //        $this->refresh();
     //    }

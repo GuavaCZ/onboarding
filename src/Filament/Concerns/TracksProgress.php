@@ -20,7 +20,6 @@ trait TracksProgress
     {
         $currentFound = false;
 
-
         $this->progress = collect($this->steps)
             ->map(function (string $step) use (&$currentFound) {
                 //                $className = app(ComponentRegistry::class)->getClass($stepName);

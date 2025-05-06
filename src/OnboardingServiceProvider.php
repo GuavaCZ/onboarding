@@ -8,7 +8,6 @@ use Guava\Onboarding\Filament\ScenarioWidget;
 use Guava\Onboarding\Support\JourneyMetaSynth;
 use Guava\Onboarding\Support\ProgressSynth;
 use Guava\Onboarding\Support\SessionMetaSynth;
-use Guava\Onboarding\Support\SessionStore;
 use Guava\Onboarding\Support\SessionStoreSynth;
 use Guava\Onboarding\Support\StepInfoSynth;
 use Livewire\Livewire;
