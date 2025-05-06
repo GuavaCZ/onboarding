@@ -36,8 +36,6 @@ trait IsJourney
 
     protected function preMount()
     {
-        //        $this->store = $this->store();
-        //        $this->reachedStep = $this->store()->meta()->get('reached-step');
     }
 
     protected function doMount() {}
