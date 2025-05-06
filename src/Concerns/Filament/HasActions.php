@@ -38,7 +38,7 @@ trait HasActions
             ->action('previousStep')
             ->icon('heroicon-o-arrow-small-left')
             ->color('gray')
-            ->hidden(fn () => ! collect($this->steps)->before(fn ($step) => $step === $this->current))
+            ->hidden(fn () => ! collect($this->steps)->before(fn ($step) => $step === $this->currentStep))
         ;
     }
 
@@ -53,7 +53,7 @@ trait HasActions
             ->icon('heroicon-o-arrow-small-right')
             ->iconPosition(IconPosition::After)
             ->color('gray')
-            ->hidden(fn () => ! collect($this->steps)->after(fn ($step) => $step === $this->current))
+            ->hidden(fn () => ! collect($this->steps)->after(fn ($step) => $step === $this->currentStep))
         ;
     }
 
@@ -68,7 +68,7 @@ trait HasActions
             ->extraAttributes([
                 'class' => 'ml-auto',
             ])
-            ->hidden(fn () => collect($this->steps)->last() !== $this->current)
+            ->hidden(fn () => collect($this->steps)->last() !== $this->currentStep)
         ;
     }
 }

@@ -10,7 +10,7 @@
             "bg-primary-200 dark:bg-primary-900 w-3" => $progress->isNext(),
         ])
         href="{{ $progress->allowed ? $progress->url : '#'}}"
-           wire:click.prevent="{{$progress->goTo()}}"
+           wire:click.prevent="{{$progress->allowed ? $progress->goTo() : ''}}"
         ></a>
     @endforeach
 </div>

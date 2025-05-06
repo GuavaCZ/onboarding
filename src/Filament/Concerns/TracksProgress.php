@@ -10,33 +10,26 @@ trait TracksProgress
 {
     public array $progress = [];
 
-    #[\Livewire\Attributes\Session(key: '{session.group}.meta.reached-step')]
-    public ?string $reachedStep = null;
-
-    public function bootedTracksProgress()
+    public function mountTracksProgress(): void
     {
-        if ($this->current) {
-            $this->refreshProgress();
-        }
+        $this->refreshProgress();
     }
 
     #[On('journey::refresh-progress')]
-    public function refreshProgress()
+    public function refreshProgress(): void
     {
-
         $currentFound = false;
 
-        $currentStepName = $this->current;
 
         $this->progress = collect($this->steps)
-            ->map(function (string $stepName) use (&$currentFound, $currentStepName) {
+            ->map(function (string $step) use (&$currentFound) {
                 //                $className = app(ComponentRegistry::class)->getClass($stepName);
                 //
                 //                $info = (new $className())->stepInfo();
 
                 $status = $currentFound ? ProgressState::Next : ProgressState::Previous;
 
-                if ($stepName === $currentStepName) {
+                if ($step === $this->currentStep) {
                     $currentFound = true;
                     $status = ProgressState::Current;
                     //                    $status = 'current';
@@ -45,9 +38,10 @@ trait TracksProgress
                 $info = [];
 
                 $indexAllowed = array_search($this->reachedStep, $this->steps);
-                $index = array_search($stepName, $this->steps);
+                $index = array_search($step, $this->steps);
                 $allowed = $index <= $indexAllowed;
-                $stepKey = (new $stepName)->session->key;
+                //                $stepKey = (new $stepName)->session->key;
+                $stepKey = $step::getSessionKey();
                 $info = [
                     'allowed' => $allowed,
                 ];
