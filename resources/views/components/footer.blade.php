@@ -1,9 +1,16 @@
-
+@props([
+    'actions' => [],
+    'copyright' => new \Illuminate\Support\HtmlString('Copyright &copy; ' . date('Y') . ' ' . config('app.name') . ' - All Rights Reserved.'),
+])
 <div {{$attributes->class(["text-sm flex flex-col gap-2 mt-auto mb-0"])}}>
-    <div class="flex flex-row flex-wrap gap-4">
-        <a href="#">Home</a>
-        <a href="#">Terms and Conditions</a>
-        <a href="#">Logout</a>
-    </div>
-    <span class="text-gray-500">Copyright &copy; 2024 Bukli s.r.o. - All Rights Reserved.</span>
+    @if(!empty($actions))
+        <div class="flex flex-row flex-wrap gap-4">
+            @foreach($actions as $action)
+                <a href="{{$action['url']}}">{{$action['label']}}</a>
+            @endforeach
+        </div>
+    @endif
+    @if($copyright)
+        <span class="text-gray-500">{{$copyright}}</span>
+    @endif
 </div>

@@ -8,6 +8,7 @@ use Guava\Onboarding\Filament\ScenarioWidget;
 use Guava\Onboarding\Support\JourneyMetaSynth;
 use Guava\Onboarding\Support\ProgressSynth;
 use Guava\Onboarding\Support\SessionMetaSynth;
+use Guava\Onboarding\Support\SessionStoreSynth;
 use Guava\Onboarding\Support\StepInfoSynth;
 use Livewire\Livewire;
 use Spatie\LaravelPackageTools\Package;
@@ -26,6 +27,7 @@ class OnboardingServiceProvider extends PackageServiceProvider
             ->name('guava-onboarding')
 //            ->hasConfigFile()
             ->hasViews()
+            ->hasTranslations()
 //            ->hasMigration('create_onboarding_table')
 //            ->hasCommand(OnboardingCommand::class)
         ;
@@ -43,5 +45,6 @@ class OnboardingServiceProvider extends PackageServiceProvider
         Livewire::propertySynthesizer(JourneyMetaSynth::class);
         Livewire::propertySynthesizer(SessionMetaSynth::class);
         Livewire::propertySynthesizer(StepInfoSynth::class);
+        Livewire::propertySynthesizer(SessionStoreSynth::class);
     }
 }

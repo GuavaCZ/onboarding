@@ -4,32 +4,48 @@ namespace Guava\Onboarding\Concerns;
 
 use Filament\Support\Exceptions\Halt;
 use Guava\Onboarding\Livewire\Step;
-use Guava\Onboarding\Support\SessionMeta;
+use Guava\Onboarding\Support\SessionStore;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Arr;
 use Livewire\Attributes\On;
 
 trait IsJourney
 {
+    use InteractsWithStore;
+
     /** @var class-string<Step> */
     public string $currentStep;
 
-    public string $currentStepName;
-
     /** @var class-string<Step> */
-    #[\Livewire\Attributes\Session(key: '{session.group}.meta.reached-step')]
-    public ?string $reachedStep = null;
+    public string $reachedStep;
 
-    public SessionMeta $session;
-
-    public function __construct()
+    public function mount()
     {
-        $this->session = $this->session();
+        if ($result = $this->preMount()) {
+            return $result;
+        }
+
+        if ($result = $this->doMount()) {
+            return $result;
+        }
+
+        if ($result = $this->postMount()) {
+            return $result;
+        }
+    }
+
+    protected function preMount() {}
+
+    protected function doMount() {}
+
+    protected function postMount()
+    {
+        $this->initialize(request()->get('step'));
     }
 
     public function initialize(?string $step): void
     {
-        $this->reachedStep ??= Arr::first($this->steps());
+        $this->reachedStep = $this->store()->meta()->get('reached-step') ?? Arr::first($this->steps());
 
         // Specific step requested
         if ($step) {
@@ -47,11 +63,22 @@ trait IsJourney
         $this->setStep($this->reachedStep);
     }
 
-    public function mount(?string $step = null): void
-    {
-        $this->initialize($step);
-    }
+    //
+    //    public string $currentStepName;
+    //
+    //    /** @var class-string<Step> */
+    //    public ?string $reachedStep = null;
 
+    //
+    //    public function mount(?string $step = null): void
+    //    {
+    //        $this->initialize($step);
+    //    }
+    //
+    //    public function dehydrate() {
+    //        $this->session->meta(['reached-step' => $this->reachedStep]);
+    //    }
+    //
     public function refresh()
     {
         //        $stepComponent = $this->getStepComponent($this->current, $this->getStepData());
@@ -59,6 +86,7 @@ trait IsJourney
         //        $this->dispatch('journey::refresh-progress');
     }
 
+    //
     /**
      * @return class-string<Step>[]
      */
@@ -70,18 +98,16 @@ trait IsJourney
         $index = array_search($step, $this->steps());
 
         $this->currentStep = $step;
-        $this->currentStepName = (new $step)->session->key;
+
         if ($index > $indexAllowed) {
             $this->reachedStep = $step;
+            $this->store()->meta(['reached-step' => $this->reachedStep]);
         }
         // TODO: Check here if the step CAN be set (either it's before the current or if current is null, only if its the first)
         // TODO: If yes, store it (JourneyState::save())
 
-        /** @var Step $instance */
-        $instance = new $step;
-
         $this->js('window.history.pushState({}, "", "' . $this->url([
-            'step' => $instance->session->key,
+            'step' => $step::getSessionKey(),
         ]) . '")');
     }
 
@@ -116,14 +142,14 @@ trait IsJourney
 
         try {
             //        $this->validate();
-            $this->callHook('beforeValidate');
+            //            $this->callHook('beforeValidate');
             //            $data = $this->validation();
-            $this->callHook('afterValidate');
+            //            $this->callHook('afterValidate');
 
             //                $this->store();
-            $this->callHook('beforeRemember');
+            //            $this->callHook('beforeRemember');
             //            $this->remember();
-            $this->callHook('afterRemember');
+            //            $this->callHook('afterRemember');
 
             $this->setStep($step);
             $this->refresh();
@@ -132,26 +158,30 @@ trait IsJourney
         }
     }
 
-    #[On('journey::clear')]
-    public function clear()
-    {
-        $this->reachedStep = null;
-        $this->setStep(Arr::first($this->steps()));
-        $this->refresh();
-    }
-
-    abstract public function routeName(): string;
-
+    //
+    //    #[On('journey::clear')]
+    //    public function clear()
+    //    {
+    //        $this->reachedStep = null;
+    // //        $this->session->meta(['reached-step' => null]);
+    //        $this->setStep(Arr::first($this->steps()));
+    //        $this->refresh();
+    //    }
+    //
+    //    abstract public function routeName(): string;
+    //
     public function urlArguments(array $arguments = []): array
     {
         return $arguments;
     }
 
+    //
     public function url(array $arguments = []): string
     {
         return route($this->routeName(), $this->urlArguments($arguments));
     }
 
+    //
     public function authorizeStep(string $step): bool
     {
         $indexAllowed = array_search($this->reachedStep, $this->steps());
@@ -159,16 +189,17 @@ trait IsJourney
 
         return $index <= $indexAllowed;
     }
+    //
+    //    abstract public function store(): SessionStore;
 
-    abstract public function session(): SessionMeta;
-
-    public function getStepData(): array
-    {
-        return [
-            'step' => $this->currentStepName,
-        ];
-    }
-
+    //
+    //    public function getStepData(): array
+    //    {
+    //        return [
+    //            'step' => $this->currentStepName,
+    //        ];
+    //    }
+    //
     /**
      * @return class-string<Step>
      *
@@ -179,10 +210,8 @@ trait IsJourney
         if ($step = Arr::first(
             $this->steps(),
             function (string $stepClass) use ($step) {
-                /** @var Step $instance */
-                $instance = new $stepClass;
 
-                return $instance->session->key === $step;
+                return $stepClass::getSessionKey() === $step;
             }
         )) {
             return $step;
@@ -190,33 +219,39 @@ trait IsJourney
 
         throw new \Exception('Step not found in the journey');
     }
+    //
+    //    public function getJourneyInfo()
+    //    {
+    //        return [];
+    //    }
+    //
+    //    public function route()
+    //    {
+    //        return \Illuminate\Support\Facades\Route::get(
+    //            //            $this->ro
+    //        )
+    //            ->name($this->routeName())
+    //        ;
+    //    }
+    //
 
-    public function getJourneyInfo()
+    protected function makeStore(): SessionStore
     {
-        return [];
-    }
-
-    public function route()
-    {
-        return \Illuminate\Support\Facades\Route::get(
-            //            $this->ro
-        )
-            ->name($this->routeName())
-        ;
+        return new SessionStore;
     }
 
     public function render(): View
     {
         return view('guava-onboarding::components.journey');
     }
-
-    public static function requiresCompletion(): bool
-    {
-        return false;
-    }
-
-    public static function completed(): bool
-    {
-        return false;
-    }
+    //
+    //    public static function requiresCompletion(): bool
+    //    {
+    //        return false;
+    //    }
+    //
+    //    public static function completed(): bool
+    //    {
+    //        return false;
+    //    }
 }
