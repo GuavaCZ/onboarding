@@ -25,7 +25,7 @@ class OnboardingMiddleware
             }
 
             $panel = Filament::getCurrentPanel();
-            $routeName = $panel->generateRouteName($journey::getRelativeRouteName());
+            $routeName = $panel->generateRouteName($journey::getRelativeRouteName($panel));
 
             if ($request->routeIs($routeName . '*')) {
                 return $next($request);
@@ -35,7 +35,7 @@ class OnboardingMiddleware
             if ($tenant = Filament::getTenant()) {
                 $params['tenant'] = $tenant;
             }
-            $url = $panel->route($journey::getRelativeRouteName(), $params);
+            $url = $panel->route($journey::getRelativeRouteName($panel), $params);
 
             return redirect($url);
         }
