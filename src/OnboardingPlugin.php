@@ -10,7 +10,6 @@ use Guava\Onboarding\ConcernsOld\HasPrefix;
 use Guava\Onboarding\ConcernsOld\HasScenarios;
 use Guava\Onboarding\Filament\Scenario;
 use Livewire\Livewire;
-use Livewire\Mechanisms\ComponentRegistry;
 
 class OnboardingPlugin implements Plugin
 {
@@ -85,7 +84,7 @@ class OnboardingPlugin implements Plugin
         foreach ($this->getJourneys() as $journey) {
             $instance = new $journey;
             foreach ($instance->steps() as $step) {
-//                $name = app(Compone::class)->getName($step);
+                //                $name = app(Compone::class)->getName($step);
                 Livewire::component($step, $step);
             }
         }
