@@ -85,8 +85,8 @@ class OnboardingPlugin implements Plugin
         foreach ($this->getJourneys() as $journey) {
             $instance = new $journey;
             foreach ($instance->steps() as $step) {
-                $name = app(ComponentRegistry::class)->getName($step);
-                Livewire::component($name, $step);
+//                $name = app(Compone::class)->getName($step);
+                Livewire::component($step, $step);
             }
         }
     }

@@ -79,7 +79,7 @@ trait IsJourney
     //        $this->session->meta(['reached-step' => $this->reachedStep]);
     //    }
     //
-    public function refresh()
+    public function refresh(): void
     {
         //        $stepComponent = $this->getStepComponent($this->current, $this->getStepData());
         //        $this->stepInfo = $stepComponent->getStepInfo();
